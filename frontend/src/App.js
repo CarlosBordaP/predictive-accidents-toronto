@@ -5,7 +5,7 @@ import { FaSnowflake, FaCloudShowersHeavy, FaSun, FaBolt , FaWind, FaCloud, FaCl
 const BACKEND_URL =
   process.env.NODE_ENV === "development"
     ? "http://127.0.0.1:5000" // Backend local
-    : "https://tu-backend.onrender.com"; // Backend en producción
+    : "https://predictive-accidents-toronto.onrender.com"; // Backend en producción
 
 // Definir las escalas y valores de lluvia y nieve
 const rainLevels = [
