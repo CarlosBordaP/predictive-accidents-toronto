@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import axios from "axios";
 import { FaSnowflake, FaCloudShowersHeavy, FaSun, FaBolt , FaWind, FaCloud, FaCloudRain, FaEye, FaEraser, FaExclamationTriangle, FaCheckCircle } from "react-icons/fa";
 
+const BACKEND_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://127.0.0.1:5000" // Backend local
+    : "https://tu-backend.onrender.com"; // Backend en producción
+
 // Definir las escalas y valores de lluvia y nieve
 const rainLevels = [
   { label: "No", min: 0, max: 0, icon: null },
@@ -54,7 +59,7 @@ function App() {
 
   const handlePrediction = async () => {
     try {
-      const res = await axios.post("http://127.0.0.1:5000/predict", formData);
+      const res = await axios.post(`${BACKEND_URL}/predict`, formData);
       setPrediction(res.data.prediction);
       setAccidentCount(Math.floor(Math.random() * (300 - 10 + 1)) + 10); // Valor dummy
       setMapHtml(res.data.map_html);
