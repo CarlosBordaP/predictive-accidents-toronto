@@ -1,6 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { FaSnowflake, FaCloudShowersHeavy, FaSun, FaBolt , FaWind, FaCloud, FaCloudRain, FaEye, FaEraser, FaExclamationTriangle, FaCheckCircle } from "react-icons/fa";
+import { 
+  FaSnowflake, 
+  FaCloudShowersHeavy, 
+  FaSun, 
+  FaBolt, 
+  FaWind, 
+  FaCloud, 
+  FaCloudRain, 
+  FaEye, 
+  FaEraser, 
+  FaExclamationTriangle, 
+  FaCheckCircle 
+} from "react-icons/fa";
 
 const BACKEND_URL =
   process.env.NODE_ENV === "development"
