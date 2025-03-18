@@ -47,6 +47,7 @@ function App() {
   const [prediction, setPrediction] = useState(null);
   const [accidentCount, setAccidentCount] = useState(null);
   const [mapHtml, setMapHtml] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -71,15 +72,37 @@ function App() {
 
   const handlePrediction = async () => {
     try {
-      const res = await axios.post(`${BACKEND_URL}/predict`, formData);
+      setIsLoading(true);  // Mostrar animación de carga
+  
+      // Preparar los datos con los nombres correctos para el backend
+      const requestData = {
+        AVG_TEMPERATURE: formData.temperature,
+        "0_OR_1_SNOW": formData.snow > 0 ? 1 : 0,  // Si hay nieve, será 1, si no, 0
+        AVG_WIND_SPEED: formData.wind_speed,
+        AVG_VISIBILITY: formData.visibility,
+        SNOW: formData.snow,  // Valor del slider de nieve
+        SNOW_ON_GROUND: formData.snow / 2,  // Se toma el valor de nieve y se divide en 2
+      };
+  
+      // console.log("Datos enviados al backend:", requestData);  // ← Imprimir en la consola
+
+      const res = await axios.post(`${BACKEND_URL}/predict`, requestData);
+      
+      const roundedAccidents = parseFloat(res.data.total_accidents).toFixed(2);
+      setAccidentCount(roundedAccidents);  // Asignar el total redondeado al estado
+      
       setPrediction(res.data.prediction);
-      setAccidentCount(Math.floor(Math.random() * (300 - 10 + 1)) + 10); // Valor dummy
       setMapHtml(res.data.map_html);
+      // console.log("Total de accidentes esperados:", res.data.total_accidents);
+  
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error en la petición:", error);  // ← Imprimir el error en consola
       alert("An error occurred while making the prediction.");
+    } finally {
+      setIsLoading(false);  // Ocultar animación de carga
     }
   };
+  
 
   const handleReset = () => {
     setFormData({
@@ -265,11 +288,10 @@ function App() {
                 </>
               )}
             </div>
-
-            {/* Cantidad de accidentes esperados (dummy) */}
+            {/* Cantidad de accidentes esperados */}
             <div className={`w-1/3 text-center p-3 font-bold text-lg rounded-lg shadow-md 
-              ${prediction === 1 ? "bg-red-500 text-white" : "bg-green-500 text-white"}`}>
-              {accidentCount} Accidents
+              ${accidentCount && accidentCount > 50 ? "bg-red-500 text-white" : "bg-green-500 text-white"}`}>
+              {accidentCount !== null ? `${accidentCount} Accidents` : "Loading..."}
             </div>
           </div>
         )}
